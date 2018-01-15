@@ -1,7 +1,7 @@
 {
   "name": "tintwarts",
   "version": "1.0.0",
-  "description": "Tint images according to Hogwarts house colors",
+  "description": "Tint images according to house colors",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

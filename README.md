@@ -1,2 +1,2 @@
 # tintwarts
-Tint images according to Hogwarts house colors
+Tint images according to house colors
