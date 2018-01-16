@@ -1,5 +1,7 @@
 <%- include('header'); %>
     <h1>Accio Avatar!</h1>
+    <div><p>Represent for your team! Pick a house name and your avatar photo. Your
+        photo will be tinted to show house pride.</p></div>
     <form enctype="multipart/form-data" method="post" action="upload">
       <div><label for="input">Choose a Photo:</label> <input type="file" name="input" /></div>
       <div><label for="house">House:</label> <select name="house">
@@ -10,4 +12,5 @@
       </select></div>
       <div><input type="submit" value="Upload" /></div>
     </form>
+    <div><p><a href="https://github.com/ccraigc/tintwarts">Tintwarts on Github</a></p></div>
 <%- include('footer'); %>
