@@ -1,4 +1,4 @@
-exports = {
+module.exports = {
     'g': {
         'primary': 'ae0001',
         'secondary': 'eeba30',
