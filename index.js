@@ -28,51 +28,61 @@ app.post('/upload', function (req, res) {
         if (err) console.log('Problem storing file in cache/input/ directory: ', err);
 
         // apply color to file.
-        const color = colors[req.body.house];
-        let srcImage, size;
+        const overlayFilename = filenameForHouse(req.body.house);
 
+        // read image
         jimp.read(inputDest).then(image => {
-            srcImage = image;
-            size = { w: image.bitmap.width, h: image.bitmap.height };
+            // resize image, read selected overlay
+            return Promise.all([image.cover(500, 500).color([
+               { 'apply': 'desaturate', 'params': [100] }
+            ]), jimp.read(overlayFilename)]);
+        }).then(images => {
+            // composite images
+            const userImage = images[0],
+                overlayImage = images[1];
 
-            const left = new jimp(size.w / 2, size.h);
-            const right = new jimp(size.w / 2, size.h);
-
-            return Promise.all([left, right]);
-        }).then(overlayImages => {
-            const leftImg = overlayImages[0],
-                rightImg = overlayImages[1];
-
-            leftImg.color([{apply:'lighten', params:[100]}]); //,{apply:'mix', params:[color.primary, 100]}]);
-            rightImg.color([{apply:'lighten', params:[100]}]); //,{apply:'mix', params:[color.secondary, 100]}]);
-
-            srcImage = leftImg;
-
-            //srcImage.composite(left, 0, 0);
-            //srcImage.composite(right, size.w / 2, 0);
-
-            return srcImage.write(outputDest);
-
-            // .color([
-            //     { 'apply': 'mix', params: [color.primary, 50] }
-            // ])
-
-        }).then(() => {
-            res.render('upload', { 'filename': path.join('output', req.files.input.name) });
+            return userImage.composite(overlayImage, 0, 0);
+        }).then(image => {
+            // write output
+            return image.write(outputDest);
+        }).then(img => {
+            const safeFilename = encodeURIComponent(req.files.input.name);
+            res.redirect('/result?filename='+safeFilename);
         }).catch(function (err) {
             return res.status(500).render('error', { 'message': err })
         });
     });
 });
 
-app.get('/play', function(req, res) {
-    const eep = new jimp(500, 500);
-    eep.then(img => {
-        img.color([{apply:'lighten', params:[100]}]);
-        img.write('cache/output/play.jpg');
+app.get('/result', function (req, res) {
+    var filename = req.query.filename;
 
-        res.send('deno');
-    });
+    res.render('result', { 'filename': path.join('output', filename) });
 });
 
-app.listen(3000);
+app.listen(process.env.PORT || 3000);
+
+// UTILITY
+
+
+function filenameForHouse(house) {
+    const assetsPath = path.join(__dirname, 'assets');
+    let filename;
+
+    switch (house) {
+        case 's':
+            filename = 'slippysnake.png';
+            break;
+        case 'g':
+            filename = 'flyinglions.png';
+            break;
+        case 'h':
+            filename = 'wheezyhippos.png';
+            break;
+        case 'r':
+        default:
+            filename = 'crowhands.png';
+    }
+
+    return  path.join(assetsPath, filename);
+}
