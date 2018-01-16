@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "PORT=80 node index.js"
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
@@ -22,7 +22,6 @@
     "express": "^4.16.2",
     "express-fileupload": "^0.3.0",
     "jimp": "^0.2.28",
-    "md5": "^2.2.1",
     "path": "^0.12.7"
   }
 }

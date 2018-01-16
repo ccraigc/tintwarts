@@ -1,9 +1,8 @@
 const express = require('express'),
   fileUpload = require('express-fileupload'),
   path = require('path'),
-  jimp = require('jimp'),
-  colors = require('./colorscheme');
-
+  jimp = require('jimp');
+  
 const app = express();
 
 app.use(fileUpload());
